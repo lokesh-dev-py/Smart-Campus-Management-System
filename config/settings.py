@@ -129,3 +129,14 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 AUTH_USER_MODEL = 'users.User'
+
+SITE_DOMAIN = 'http://127.0.1:8000'
+SITE_NAME = 'Smart Campus Management'
+
+# Email settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'live.smtp.mailtrap.io'
+EMAIL_HOST_USER = 'api'
+EMAIL_HOST_PASSWORD = '3f427df77992647a1a9bb25280f8f32f'
+EMAIL_PORT = '587'
