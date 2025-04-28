@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <!-- Optional: Add Tailwind CSS link if not already included -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <!-- 🛑 ADD THIS LINE -->
+    {% load widget_tweaks %}
+    
+    <form method="post" class="max-w-md mx-auto bg-white p-8 rounded-lg shadow-md mt-10">
+        {% csrf_token %}
+        <h2 class="text-2xl font-bold mb-6 text-center">Register</h2>
+
+        <!-- Email Field -->
+        <div class="mb-4">
+            <label for="{{ form.email.id_for_label }}" class="block text-gray-700 font-semibold mb-2">
+                {{ form.email.label }}
+            </label>
+            {% render_field form.email class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" %}
+            {% if form.email.errors %}
+                <p class="text-red-500 text-sm mt-1">{{ form.email.errors.0 }}</p>
+            {% endif %}
+        </div>
+
+        <!-- Name Field -->
+        <div class="mb-4">
+            <label for="{{ form.name.id_for_label }}" class="block text-gray-700 font-semibold mb-2">
+                {{ form.name.label }}
+            </label>
+            {% render_field form.name class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" %}
+            {% if form.name.errors %}
+                <p class="text-red-500 text-sm mt-1">{{ form.name.errors.0 }}</p>
+            {% endif %}
+        </div>
+
+        <!-- Password Field -->
+        <div class="mb-4">
+            <label for="{{ form.password.id_for_label }}" class="block text-gray-700 font-semibold mb-2">
+                {{ form.password.label }}
+            </label>
+            {% render_field form.password class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" %}
+            {% if form.password.errors %}
+                <p class="text-red-500 text-sm mt-1">{{ form.password.errors.0 }}</p>
+            {% endif %}
+        </div>
+
+        <!-- Confirm Password Field -->
+        <div class="mb-6">
+            <label for="{{ form.confirm_password.id_for_label }}" class="block text-gray-700 font-semibold mb-2">
+                {{ form.confirm_password.label }}
+            </label>
+            {% render_field form.confirm_password class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" %}
+            {% if form.confirm_password.errors %}
+                <p class="text-red-500 text-sm mt-1">{{ form.confirm_password.errors.0 }}</p>
+            {% endif %}
+        </div>
+
+        <!-- Submit Button -->
+        <div class="text-center">
+            <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg">
+                Register
+            </button>
+        </div>
+    </form>    
+</body>
+</html>

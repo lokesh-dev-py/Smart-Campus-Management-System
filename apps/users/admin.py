@@ -6,10 +6,8 @@ from users.models import User
 @admin.register(User)
 class UserModelAdmin(UserAdmin):
     model = User
-    list_display = ('email', 'name', 'is_staff', 'is_active', 'is_teacher', 'is_student')
-    list_filter = ('is_staff', 'is_active', 'is_teacher', 'is_student')
-    search_fields = ('email', 'name')
-    filter_horizontal = ()
+    list_display = ['email', 'name', 'is_staff', 'is_active', 'is_teacher', 'is_student']
+    list_filter = ['is_superuser']
     fieldsets = [
         ('User Credentials', {'fields': ['email', 'password']}),
         ('Personal Info', {'fields': ['name']}),
@@ -24,4 +22,7 @@ class UserModelAdmin(UserAdmin):
             }
         )
     ]
+    search_fields = ['email']
+    ordering = ['email','id']
+    filter_horizontal = []
 
