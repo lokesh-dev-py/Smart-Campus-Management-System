@@ -120,6 +120,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = 'users.User'
 
+# Site configuration
 SITE_DOMAIN = 'http://127.0.1:8000'
 SITE_NAME = 'Smart Campus Management'
 
