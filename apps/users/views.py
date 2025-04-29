@@ -8,7 +8,7 @@ from django.utils.encoding import force_bytes, force_str
 from django.contrib.auth.tokens import default_token_generator
 from django.urls import reverse
 from users.models import User
-
+from django.contrib.auth import authenticate, login
 # Create your views here.
 def register_view(request):
     form = RegistrationForm(request.POST)
@@ -34,8 +34,6 @@ def register_view(request):
         form = RegistrationForm()
     return render(request, 'users/register.html', {'form': form})
 
-def login_view(request):
-    return render(request, 'users/login.html')
 
 def activate_account(request, uidb64, token):
     try:
@@ -58,3 +56,29 @@ def activate_account(request, uidb64, token):
     except (TypeError, ValueError, OverflowError, User.DoesNotExist):
         messages.error(request, "Activation link is invalid or has expired.")
         return redirect('register')
+    
+def login_view(request):
+    if request.user.is_authenticated:
+        if request.user.is_teacher:
+            return redirect('teacher_dashboard')
+        elif request.user.is_student:
+            return redirect('student_dashboard')
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        if not email or not password:
+            messages.error(request, "Email and password are required.")
+            return redirect('login')
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            messages.error(request, "Invalid email or password.")
+            return redirect('login')
+        if not user.is_active:
+            messages.error(request, "Account is not activated. Please check your email.")
+            return redirect('login')
+        user = authenticate(request, email=email, password=password)
+        if user is not None:
+            login(request,user)
+            if user
+    return render(request, 'users/login.html')
