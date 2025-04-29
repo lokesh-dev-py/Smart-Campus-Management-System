@@ -1,11 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1>Login Page</h1>
-</body>
-</html>
+<!-- filepath: d:\Django-projects\smart_campus\apps\users\templates\users\login.html -->
+{% extends 'users/base.html' %}
+
+{% block content %}
+<div class="flex justify-center items-center h-screen bg-gray-100">
+    <div class="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
+        <h2 class="text-2xl font-bold text-center text-blue-600 mb-6">Login</h2>
+        <form method="post" novalidate>
+            {% csrf_token %}
+            <!-- Email Field -->
+            <div class="mb-4">
+                <label for="email" class="block text-gray-700 font-semibold mb-2">Email</label>
+                <input type="email" id="email" name="email" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Enter your email" required>
+            </div>
+            <!-- Password Field -->
+            <div class="mb-4">
+                <label for="password" class="block text-gray-700 font-semibold mb-2">Password</label>
+                <input type="password" id="password" name="password" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Enter your password" required>
+            </div>
+            <!-- Submit Button -->
+            <div class="mb-4">
+                <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg">Login</button>
+            </div>
+        </form>
+        <p class="text-center text-gray-600 text-sm">
+            Don't have an account? <a href="{% url 'register' %}" class="text-blue-500 hover:underline">Register</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

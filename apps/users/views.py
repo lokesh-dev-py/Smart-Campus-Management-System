@@ -10,6 +10,10 @@ from django.urls import reverse
 from users.models import User
 from django.contrib.auth import authenticate, login
 # Create your views here.
+
+def home(request):
+    return render(request, 'users/home.html')
+
 def register_view(request):
     form = RegistrationForm(request.POST)
     if form.is_valid():
@@ -80,5 +84,14 @@ def login_view(request):
         user = authenticate(request, email=email, password=password)
         if user is not None:
             login(request,user)
-            if user
+            if user.is_teacher:
+                return redirect('teacher_dashboard')
+            elif user.is_student:
+                return redirect('student_dashboard')
+            else:
+                messages.error(request, "User type not recognized.")
+                return redirect('home')
+        else:
+            messages.error(request, "Invalid email or password.")
+            return redirect('login')
     return render(request, 'users/login.html')

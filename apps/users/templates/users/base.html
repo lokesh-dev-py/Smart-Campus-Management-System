@@ -1,0 +1,37 @@
+<!-- filepath: d:\Django-projects\smart_campus\apps\users\templates\users\base.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Campus Management System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <!-- Navbar -->
+    <nav class="bg-blue-600 text-white shadow-md">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="{% url 'home' %}" class="text-xl font-bold">Smart Campus</a>
+            <ul class="flex space-x-6">
+                <li><a href="{% url 'home' %}" class="hover:text-gray-200">Home</a></li>
+                <li><a href="{% url 'register' %}" class="hover:text-gray-200">Register</a></li>
+                <li><a href="{% url 'dashboard' %}" class="hover:text-gray-200">Dashboard</a></li>
+                {% comment %} <li><a href="{% url 'change_password' %}" class="hover:text-gray-200">Change Password</a></li> {% endcomment %}
+                <li><a href="{% url 'logout' %}" class="hover:text-gray-200">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto mt-8">
+        {% block content %}
+        <!-- Content will be injected here -->
+        {% endblock %}
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white text-center py-4 mt-8">
+        <p>&copy; 2025 Smart Campus Management System. All rights reserved.</p>
+    </footer>
+</body>
+</html>
