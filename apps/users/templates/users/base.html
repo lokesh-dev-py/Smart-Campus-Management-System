@@ -14,10 +14,22 @@
             <a href="{% url 'home' %}" class="text-xl font-bold">Smart Campus</a>
             <ul class="flex space-x-6">
                 <li><a href="{% url 'home' %}" class="hover:text-gray-200">Home</a></li>
-                <li><a href="{% url 'register' %}" class="hover:text-gray-200">Register</a></li>
-                <li><a href="{% url 'dashboard' %}" class="hover:text-gray-200">Dashboard</a></li>
-                {% comment %} <li><a href="{% url 'change_password' %}" class="hover:text-gray-200">Change Password</a></li> {% endcomment %}
-                <li><a href="{% url 'logout' %}" class="hover:text-gray-200">Logout</a></li>
+                {% if not user.is_authenticated %}
+                    <li><a href="{% url 'register' %}" class="hover:text-gray-200">Register</a></li>
+                    <li><a href="{% url 'login' %}" class="hover:text-gray-200">Login</a></li>
+                {% endif %}
+                {% if user.is_authenticated %}
+                    {% if user.is_student %}
+                        <li><a href="{% url 'student_dashboard' %}" class="hover:text-gray-200">Dashboard</a></li>
+                    {% elif user.is_teacher %}
+                        <li><a href="{% url 'teacher_dashboard' %}" class="hover:text-gray-200">Dashboard</a></li>
+                    {% endif %}
+                    {% comment %} <li><a href="{% url 'change_password' %}" class="hover:text-gray-200">Change Password</a></li> {% endcomment %}
+                    <form action="{% url 'logout' %}" method="post" class="inline">
+                        {% csrf_token %}
+                        <button type="submit" class="hover:text-gray-200">Logout</button>
+                    </form>
+                {% endif %}
             </ul>
         </div>
     </nav>

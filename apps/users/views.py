@@ -15,29 +15,28 @@ def home(request):
     return render(request, 'users/home.html')
 
 def register_view(request):
-    form = RegistrationForm(request.POST)
-    if form.is_valid():
-        user = form.save(commit=False)
-        user.set_password(form.cleaned_data['password'])
-        user.is_active = False  # Set to False until email confirmation
-        user.save()
-        # HERE SHOULD BE THE EMAIL CONFIRMATION LOGIC
-        uid64 = urlsafe_base64_encode(force_bytes(user.pk))
-        token = default_token_generator.make_token(user)
+    if request.method == 'POST':
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.is_active = False  # Email confirmation pending
+            user.save()
 
-        activation_link = reverse('activate', kwargs={'uidb64': uid64, 'token': token})
-        activation_url = f"{settings.SITE_DOMAIN}{activation_link}"
-        # Send email with activation_url
-        send_activation_email(user.email, activation_url)
-        messages.success(
-            request, 
-            "Registration successful! Please check your email to confirm your account."
-        )
-        return redirect('login')  # Redirect to login page after registration
+            uid64 = urlsafe_base64_encode(force_bytes(user.pk))
+            token = default_token_generator.make_token(user)
+            activation_link = reverse('activate', kwargs={'uidb64': uid64, 'token': token})
+            activation_url = f"{settings.SITE_DOMAIN}{activation_link}"
+            send_activation_email(user.email, activation_url)
+
+            messages.success(
+                request,
+                "Registration successful! Please check your email to confirm your account."
+            )
+            return redirect('login')
     else:
         form = RegistrationForm()
-    return render(request, 'users/register.html', {'form': form})
 
+    return render(request, 'users/register.html', {'form': form})
 
 def activate_account(request, uidb64, token):
     try:

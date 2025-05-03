@@ -7,8 +7,19 @@
     <p class="text-lg text-gray-700 mb-6">
         Manage your campus activities efficiently with our platform.
     </p>
-    <a href="{% url 'register' %}" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg">
-        Get Started
-    </a>
+    {% if not user.is_authenticated %}
+        <a href="{% url 'register' %}" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg">
+            Get Started
+        </a>
+    {% elif user.is_student %}
+        <a href="{% url 'student_dashboard' %}" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg">
+            See your Dashboard
+        </a>
+    {% elif user.is_teacher %}
+        <a href="{% url 'teacher_dashboard' %}" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg">
+            See your Dashboard
+        </a>
+    {% endif %}
+
 </div>
 {% endblock %}

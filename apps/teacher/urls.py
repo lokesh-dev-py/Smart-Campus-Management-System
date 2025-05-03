@@ -1,6 +1,6 @@
 from django.urls import path
 from teacher.views import dashboard
 urlpatterns = [
-    path('dashboard/', dashboard, name='dashboard'),
+    path('teacher-dashboard/', dashboard, name='teacher_dashboard'),
     # Add more teacher-related URLs here
 ]

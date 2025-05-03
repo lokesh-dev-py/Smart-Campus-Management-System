@@ -133,3 +133,6 @@ EMAIL_HOST = 'live.smtp.mailtrap.io'
 EMAIL_HOST_USER = 'api'
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 EMAIL_PORT = '587'
+
+#Logout
+LOGOUT_REDIRECT_URL = 'login'
