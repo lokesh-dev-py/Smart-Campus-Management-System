@@ -1,14 +1,17 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from users.forms import RegistrationForm
-from users.utils import send_activation_email
+from users.forms import RegistrationForm, PasswordResetForm
+from users.utils import send_activation_email, send_password_reset_email
 from django.conf import settings
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.contrib.auth.tokens import default_token_generator
 from django.urls import reverse
 from users.models import User
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import PasswordChangeForm, SetPasswordForm
+from django.views.decorators.csrf import csrf_protect
+
 # Create your views here.
 
 def home(request):
@@ -94,3 +97,67 @@ def login_view(request):
             messages.error(request, "Invalid email or password.")
             return redirect('login')
     return render(request, 'users/login.html')
+
+
+@csrf_protect
+def password_change_view(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(user=request.user,
+                                  data=request.POST)
+        if form.is_valid():
+            form.save()
+            logout(request)
+            request.session.flush()
+            messages.success(request, 'Your password was successfully updated!')
+            return redirect('login')
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, error)
+    else:
+        form = PasswordChangeForm(user=request.user)
+    return render(request, 'users/change_password.html', {'form': form})
+
+def password_reset_view(request):
+    if request.method == 'POST':
+        form = PasswordResetForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data.get('email')
+            user = User.objects.filter(email=email).first()
+            if user:
+                uid64 = urlsafe_base64_encode(force_bytes(user.pk))
+                token = default_token_generator.make_token(user)
+                reset_link = reverse('password_reset_confirm', kwargs={'uidb64': uid64, 'token': token})
+                reset_url = f"{settings.SITE_DOMAIN}{reset_link}"
+                send_password_reset_email(user.email, reset_url)
+                messages.success(request, "Password reset link sent to your email.")
+            else:
+                messages.error(request, "Email not found.")
+            return redirect('login')
+    else:
+        form = PasswordResetForm()
+    return render(request, 'users/password_reset.html', {'form': form})
+
+def password_reset_confirm(request, uidb64, token):
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+        if not default_token_generator.check_token(user, token):
+            messages.error(request, ("This link is invalid or has expired."))
+            return redirect('password_reset')
+        if request.method == 'POST':
+            form = SetPasswordForm(user, request.POST)
+            if form.is_valid():
+                form.save()
+                messages.success(request, "Your password has been reset successfully.")
+                return redirect('login')
+            else:
+                for field, errors in form.errors.items():
+                    for error in errors:
+                        messages.error(request, error)
+        else:
+            form = SetPasswordForm(user=user)
+        return render(request, 'users/password_reset_confirm.html', {'uidb64': uidb64, 'token': token})
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        messages.error(request, "An error occurred. Please try again.")
+        return redirect('password_reset')

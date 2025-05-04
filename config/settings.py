@@ -134,5 +134,6 @@ EMAIL_HOST_USER = 'api'
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 EMAIL_PORT = '587'
 
-#Logout
+#Logout Login Redirect URL
 LOGOUT_REDIRECT_URL = 'login'
+LOGIN_URL = 'login'

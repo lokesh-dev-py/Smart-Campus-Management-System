@@ -24,7 +24,7 @@
                     {% elif user.is_teacher %}
                         <li><a href="{% url 'teacher_dashboard' %}" class="hover:text-gray-200">Dashboard</a></li>
                     {% endif %}
-                    {% comment %} <li><a href="{% url 'change_password' %}" class="hover:text-gray-200">Change Password</a></li> {% endcomment %}
+                    <li><a href="{% url 'change_password' %}" class="hover:text-gray-200">Change Password</a></li>
                     <form action="{% url 'logout' %}" method="post" class="inline">
                         {% csrf_token %}
                         <button type="submit" class="hover:text-gray-200">Logout</button>

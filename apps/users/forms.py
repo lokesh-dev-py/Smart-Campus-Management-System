@@ -48,3 +48,17 @@ class RegistrationForm(forms.ModelForm):
         if commit:
             user.save()
         return user
+
+
+class PasswordResetForm(forms.Form):
+    email = forms.EmailField(label='Email', max_length=254, required=True,widget=forms.EmailInput(
+        attrs={'placeholder': 'Enter your email'}
+    ))
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        # Check if the email exists in the database
+        if not User.objects.filter(email=email).exists():
+            raise forms.ValidationError("No account found with this email address.")
+        return email
+    
